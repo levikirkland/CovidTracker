@@ -1,4 +1,7 @@
 # CovidTracker
+<img src="https://img.shields.io/circleci/project/github/badges/shields/master" alt="build status"></a>
+    <a href="https://circleci.com/gh/badges/daily-tests">
+
 Sample Blazor App
 Visit [Covid Tracker](https://statecovidtracker.azurewebsites.net/)
 ### Logging
