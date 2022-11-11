@@ -13,5 +13,24 @@ namespace CovidTracker.Client.Responses
         public int total { get; set; }
         public int hospitalizedCurrently { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null) { return false; }
+            if (object.ReferenceEquals(this, obj)) { return true; }
+
+            var model = obj as StateResponse;
+            return this.dateModified == model.dateModified
+                && this.state == model.state
+                && this.positive == model.positive
+                && this.negative == model.negative
+                && this.total == model.total
+                && this.hospitalizedCurrently == model.hospitalizedCurrently;
+        }
+
+        public override int GetHashCode()
+        {
+            return $"{this.dateModified}{this.state}{this.positive}{this.negative}{this.total}{this.hospitalizedCurrently}".GetHashCode();
+        }
+
     }
 }

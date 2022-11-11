@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CovidTracker.Client.JsonDeserializers
 {
-    public sealed class StateDeserializer
+    public class StateDeserializer
     {
         public IReadOnlyCollection<StateResponse> Deserialize(JsonTextReader jsonTextReader)
         {

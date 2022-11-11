@@ -1,8 +1,4 @@
-﻿using CovidTracker.Client.Resovers;
-using CovidTracker.Client.Responses;
-using Polly.Retry;
-using Polly;
-using System.Net;
+﻿using CovidTracker.Client.Responses;
 using CovidTracker.Client.JsonDeserializers;
 using Newtonsoft.Json;
 
