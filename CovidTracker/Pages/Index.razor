@@ -1,0 +1,104 @@
+﻿@page "/"
+@using CovidTracker.Models
+@using CovidTracker.Services
+@using MudBlazor
+
+
+<PageTitle>Index</PageTitle>
+
+<h3>Find Covid Results by State, States, or US, and filter by Date</h3>
+<p class="font-italics">All results are historical thru March, 2021.</p>
+
+<div class="col-2">
+    <EditForm Model="model">
+        <MudSelect @bind-Value="model.state" Label="Select State" HelperText="State" Placeholder="Please Select"
+                   AdornmentIcon="@Icons.Material.Filled.Map" AdornmentColor="Color.Primary">
+            @foreach (States item in Enum.GetValues(typeof(States)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
+        <MudCheckBox @bind-Checked="@model.UseDate"></MudCheckBox>
+        <MudDatePicker Label="Basic example" @bind-Date="model.date" MinDate="min" MaxDate="max" />
+    </EditForm>
+    <MudFab Color="Color.Tertiary" value="Search" Size="Size.Small" @onclick="@SearchIssues" StartIcon="@Icons.Material.Filled.Search" DisableElevation="true" />
+
+</div>
+<MudIconButton Icon="@Icons.Material.Filled.Refresh" @onclick="@OnInitializedAsync" aria-label="refresh"></MudIconButton>
+
+@if (CovidStates is null)
+{
+    <p><em>Failed to fetch Covid Tracker API...Logging Error...</em></p>
+}
+else
+{
+  
+       <table class="table table-striped">
+           <thead>
+               <tr>
+                    <th class="w-25" scope="col">Date Modified</th>
+                    <th  scope="col">State</th>
+                    <th  scope="col">Total</th>
+                    <th  scope="col">Positive</th>
+                    <th scope="col">Negative</th>
+                    <th  scope="col">Hospitization Rate</th>
+                    
+               </tr>
+           </thead>
+           <tbody>
+
+           @foreach (var item in CovidStates)
+           {
+                <tr>
+                    <td>@item.dateModified </td>
+                    <td>@item.state</td>
+                    <td>@item.total</td>
+                    <td>@item.positive</td>
+                    <td>@item.negative</td>
+                    <td>
+                        @item.hospitalizedCurrently
+                    </td> 
+               </tr>
+           }
+           </tbody>
+       </table>
+}
+
+
+@code {
+    public class IndexModel
+    {
+        public DateTime? date { get; set; } = DateTime.Today;
+        public States state { get; set; } = States.GA;
+        public bool UseDate { get; set; } = true;
+    }
+    DateTime min = new DateTime(2020, 04, 01);
+    DateTime max = new DateTime(2021, 03, 07);
+
+    IndexModel model = new IndexModel();
+
+    [Inject]
+    public ICovidTrackerService? CovidTrackerService { get; set; }
+
+    public IEnumerable<CovidStateModel>? CovidStates { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {           
+        CovidStates = await CovidTrackerService!.GetCurrentStatesDaily();
+    }
+
+    protected async Task SearchIssues()
+    {
+        if (model.UseDate)
+        {
+            DateOnly dateOnly = DateOnly.FromDateTime(Convert.ToDateTime(model.date));
+
+            CovidStates = await CovidTrackerService!.GetByState_Date(model.state.ToString().ToLower(), string.Format("{0:yyyyMMdd}", dateOnly));
+        }
+        else
+        {
+            CovidStates = await CovidTrackerService!.GetByState_Current(model.state.ToString().ToLower());
+        }
+
+    }
+}

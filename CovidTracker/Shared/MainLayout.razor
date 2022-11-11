@@ -1,0 +1,18 @@
+﻿@using MudBlazor
+@inherits LayoutComponentBase
+
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<MudLayout>
+    <MudAppBar>
+        Covid Tracker
+    </MudAppBar>
+    <MudDrawer Open="true">
+
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
