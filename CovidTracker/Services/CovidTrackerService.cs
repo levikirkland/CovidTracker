@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CovidTracker.Client.Factories;
+using CovidTracker.Client.Responses;
 using CovidTracker.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +23,13 @@ namespace CovidTracker.Services
         public async Task<IEnumerable<CovidStateModel>> GetByState_Current(string state)
         {
             CancellationToken cancellationToken = new CancellationToken();
-            var covidClient = _client.Create();
+
 
             try
             {
-                var response = await covidClient.GetByState_Current<CovidStateModel>(state, cancellationToken);
+                string uri = ($"states/{state}/current.json");
+                var covidClient = _client.Create();
+                var response = await covidClient.GetAsync(uri, cancellationToken);
                 var stateResp = _mapper.Map<IEnumerable<CovidStateModel>>(response);
                 return stateResp;
             }
@@ -37,15 +40,17 @@ namespace CovidTracker.Services
             return default!;
         }
 
-        public async Task<IEnumerable<CovidStateModel>> GetByState_Date(string state, string dt)
+        public async Task<IReadOnlyCollection<CovidStateModel>> GetByState_Date(string state, string dt)
         {
             CancellationToken cancellationToken = new CancellationToken();
 
-            var covidClient = _client.Create();
+
             try
             {
-                var response = await covidClient.GetByState_Date(state, dt, cancellationToken);
-                var stateResp = _mapper.Map<IEnumerable<CovidStateModel>>(response);
+                var uri = ($"states/{state}/{dt}.json");
+                var covidClient = _client.Create();
+                var response = await covidClient.GetAsync(uri, cancellationToken);
+                var stateResp = _mapper.Map<IReadOnlyCollection<CovidStateModel>>(response);
                 return stateResp.ToList();
             }
             catch (HttpRequestException)
@@ -55,16 +60,17 @@ namespace CovidTracker.Services
             return default!;
         }
 
-        public async Task<IEnumerable<CovidStateModel>> GetCurrentStatesDaily()
+        public async Task<IReadOnlyCollection<CovidStateModel>> GetCurrentStatesDaily()
         {
             CancellationToken cancellationToken = new CancellationToken();
             try
             {
 
                 var covidClient = _client.Create();
-                var response = await covidClient.GetCurrentStatesDaily(cancellationToken);
-                var stateResp = _mapper.Map<IEnumerable<CovidStateModel>>(response).OrderBy(x => x.positive);
-                return stateResp.Reverse();
+                var uri = $"states/current.json";
+                var response = await covidClient.GetAsync(uri, cancellationToken);
+                var stateResp = _mapper.Map<IReadOnlyCollection<CovidStateModel>>(response).OrderBy(x => x.positive);
+                return stateResp.ToList();
             }
             catch (HttpRequestException)
             {
