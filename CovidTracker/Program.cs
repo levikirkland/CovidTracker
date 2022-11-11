@@ -1,7 +1,7 @@
 using AutoMapper;
 using CovidTracker.Client.Clients;
 using CovidTracker.Client.Factories;
-using CovidTracker.Client.Resovers;
+using CovidTracker.Client.Resolvers;
 using CovidTracker.Common.Profiles;
 using CovidTracker.Services;
 using Serilog;
