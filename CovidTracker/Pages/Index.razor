@@ -18,7 +18,7 @@
                 <MudSelectItem Value="@item">@item</MudSelectItem>
             }
         </MudSelect>
-        <MudCheckBox @bind-Checked="@model.UseDate"></MudCheckBox>
+        <MudCheckBox @bind-Checked="@model.UseDate">Use Date in Search</MudCheckBox>
         <MudDatePicker Label="Basic example" @bind-Date="model.date" MinDate="min" MaxDate="max" />
     </EditForm>
     <MudFab Color="Color.Tertiary" value="Search" Size="Size.Small" @onclick="@SearchIssues" StartIcon="@Icons.Material.Filled.Search" DisableElevation="true" />

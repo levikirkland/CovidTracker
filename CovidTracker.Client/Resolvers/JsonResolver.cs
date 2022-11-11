@@ -1,6 +1,6 @@
 ﻿using Utf8Json;
 //handle blocking occuring from deserializing the response
-namespace CovidTracker.Client.Resovers
+namespace CovidTracker.Client.Resolvers
 {
     public class JsonResolver
     {
