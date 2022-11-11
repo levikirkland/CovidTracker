@@ -7,8 +7,8 @@ using CovidTracker.Services;
 using Serilog;
 using Polly;
 using System.Net;
-using CovidTracker.Client.JsonDeserializers;
 using MudBlazor.Services;
+using CovidTracker.Client.JsonDeserializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +21,6 @@ MapperConfiguration mapperConfiguration = new MapperConfiguration(mapperConfig =
 });
 
 builder.Services.AddSingleton(mapperConfiguration.CreateMapper());
-
 
 builder.Services.AddSingleton<ICovidTrackerService, CovidTrackerService>();
 builder.Services.AddSingleton<CovidTrackerFactory>();

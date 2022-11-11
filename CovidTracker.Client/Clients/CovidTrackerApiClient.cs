@@ -1,5 +1,5 @@
-﻿using CovidTracker.Client.Responses;
-using CovidTracker.Client.JsonDeserializers;
+﻿using CovidTracker.Client.JsonDeserializers;
+using CovidTracker.Client.Responses;
 using Newtonsoft.Json;
 
 namespace CovidTracker.Client.Clients
@@ -15,48 +15,14 @@ namespace CovidTracker.Client.Clients
             _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
         }
 
-        public async Task<IEnumerable<StateResponse>> GetCurrentStatesDaily(CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<StateResponse>> GetAsync(string uri, CancellationToken cancellationToken)
         {
-            var request = CreateRequest($"states/current.json");
-            using (var result = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false))
-            {
-                result.EnsureSuccessStatusCode();
-                using (var streamReader = new StreamReader(await result.Content.ReadAsStreamAsync()))
-                using (var jsonTextReader = new JsonTextReader(streamReader))
-                {
-                    return _jsonSerializer.Deserialize(jsonTextReader);
-                }
-            }
-        }
-
-        public async Task<IEnumerable<StateResponse>> GetByState_Date(string state, string dt, CancellationToken cancellationToken)
-        {
-            var request = CreateRequest($"states/{state}/{dt}.json");
-
-            using (var result = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false))
-            {
-                result.EnsureSuccessStatusCode();
-                using (var streamReader = new StreamReader(await result.Content.ReadAsStreamAsync()))
-                using (var jsonTextReader = new JsonTextReader(streamReader))
-                {
-                    return _jsonSerializer.Deserialize(jsonTextReader);
-                }
-            }
-        }
-
-        public async Task<IEnumerable<StateResponse>> GetByState_Current<StateReponse>(string state, CancellationToken cancellationToken)
-        {
-            var request = CreateRequest($"states/{state}/current.json");
-
-            using (var result = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false))
-            {
-                result.EnsureSuccessStatusCode();
-                using (var streamReader = new StreamReader(await result.Content.ReadAsStreamAsync()))
-                using (var jsonTextReader = new JsonTextReader(streamReader))
-                {
-                    return _jsonSerializer.Deserialize(jsonTextReader);
-                }
-            }
+            var request = CreateRequest(uri);
+            using var result = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+            using var responseStream = await result.Content.ReadAsStreamAsync(cancellationToken);
+            using var streamReader = new StreamReader(responseStream);
+            using var jsonTextReader = new JsonTextReader(streamReader);
+            return _jsonSerializer.Deserialize(jsonTextReader)!;
         }
 
         private static HttpRequestMessage CreateRequest(string uri)
