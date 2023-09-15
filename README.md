@@ -3,7 +3,7 @@
     <a href="https://circleci.com/gh/badges/daily-tests">
 
 Sample Blazor App
-Visit [Covid Tracker](https://statecovidtracker.azurewebsites.net/)
+Visit [Covid Tracker](https://statecovidtracker.azurewebsites.net/)   No longer hosted, but easy enough to spin up again.
 ### Logging
 #### Datalust/SEQ
 run command in powershell if SEQ not installed
