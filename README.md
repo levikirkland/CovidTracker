@@ -25,5 +25,6 @@ Uncheck the Use Date In Search option to search for current Covid data by State 
 
 ### Release
 Pull requests merge into main and will release into Azure. [Covid Tracker](https://statecovidtracker.azurewebsites.net/)
+##No long hosted, but you could easily spin this up to test. I really like the way the reponse is handled in this app. It's a lot to type out but no blocking and a very fast response.
 
 
